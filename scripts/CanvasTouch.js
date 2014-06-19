@@ -34,10 +34,9 @@ CanvasTouch.prototype._handleDown = function(event) {
     this.gCtx.clearRect(0, 0, this.gCanvas.width, this.gCanvas.height);
 
     this.entities.forEach(function(entity) {
+        entity.applyTransformations();
         entity.render(that.gCtx, true);
-
         var imageData = that.gCtx.getImageData(clickPoint.x, clickPoint.y, 1, 1);
-        console.log(imageData);
 
         if (imageData.data[3] > 0) {
             events.push(entity);

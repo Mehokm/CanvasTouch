@@ -87,16 +87,29 @@ Entity.prototype.getTransformations = function() {
     return this.transformations;
 };
 
-Entity.prototype.translate = function(x, y) {
-    this.ctx.translate(x, y);
-    this.transformations.push(function() {
-        this.gCtx.translate(x, y);
+Entity.prototype.applyTransformations = function() {
+    this.gCtx.save();
+    this.transformations.forEach(function(func) {
+        func();
     });
+    this.gCtx.restore();
+    this.transformations = [];
+};
+    
+Entity.prototype.translate = function(x, y) {
+    var that = this;
+    this.ctx.translate(x, y);
+    var trans = function() {
+        that.gCtx.translate(x, y);
+    };
+    this.transformations.push(trans);
 };
 
 Entity.prototype.rotate = function(angle) {
+    var that = this;
     this.ctx.rotate(angle);
-    this.transformations.push(function() {
-        this.gCtx.rotate(angle);
-    });
+    var rot = function() {
+        that.gCtx.rotate(angle);
+    };
+    this.transformations.push(rot);
 };
