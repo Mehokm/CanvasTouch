@@ -1,7 +1,9 @@
 function Entity() {
     this.dir = 1;
     this.color = "black";
-    this.transformations = [];
+    this.currentTransformMatrix = [1, 0, 0, 1, 0, 0];
+    this.currentTranslateMatrix = [1, 0, 0, 1, 0, 0];
+    this.currentRotateMatrix = [1, 0, 0, 1, 0, 0];
 }
 Entity.prototype.drawStack = [];
 
@@ -10,41 +12,28 @@ Entity.prototype.setCanvas = function(canvasId) {
     this._setContext();
 };
 
-Entity.prototype.setGCanvas = function(gCanvas) {
-    this.gCanvas = gCanvas;
-    this._setGContext();
-};
-
 Entity.prototype.getCanvas = function() {
     return this.canvas;
 };
 
-Entity.prototype.getGCanvas = function() {
-    return this.gCanvas;
-};
 
 Entity.prototype._setContext = function() {
     this.ctx = this.canvas.getContext('2d');
 };
 
-Entity.prototype._setGContext = function() {
-    this.gCtx = this.gCanvas.getContext('2d');
-};
 
 Entity.prototype.getContext = function() {
     return this.ctx;
 };
 
-Entity.prototype.getGContext = function() {
-    return this.gCtx;
-};
-
 Entity.prototype.update = function(func) {
     this.ctx.save();
-    this.gCtx.save();
-    func(this, this.ctx, this.gCtx);
+    func(this, this.ctx);
     this.ctx.restore();
-    this.gCtx.restore();
+
+    // if (this.updateBounds) {
+    //     this.updateBounds();
+    // }
 };
 
 Entity.prototype.registerOnClick = function(func) {
@@ -83,33 +72,43 @@ Entity.prototype.setColor = function(color) {
     this.color = color;
 };
 
-Entity.prototype.getTransformations = function() {
-    return this.transformations;
-};
-
-Entity.prototype.applyTransformations = function() {
-    this.gCtx.save();
-    this.transformations.forEach(function(func) {
-        func();
-    });
-    this.gCtx.restore();
-    this.transformations = [];
+Entity.prototype.resetCurrentMatrix = function() {
+    this.currentTransformMatrix = [1, 0, 0, 1, 0, 0];
 };
     
 Entity.prototype.translate = function(x, y) {
-    var that = this;
     this.ctx.translate(x, y);
-    var trans = function() {
-        that.gCtx.translate(x, y);
-    };
-    this.transformations.push(trans);
+    var matrix = [1, 0, 0, 1, x, y];
+    if (!this.currentTranslateMatrix.equals(matrix)) {
+        this.currentTransformMatrix = this.multiplyMatrix(this.currentTransformMatrix, matrix);
+        this.currentTranslateMatrix = matrix;
+    }
 };
 
 Entity.prototype.rotate = function(angle) {
-    var that = this;
     this.ctx.rotate(angle);
-    var rot = function() {
-        that.gCtx.rotate(angle);
-    };
-    this.transformations.push(rot);
+    var matrix = [Math.cos(angle), Math.sin(angle), -Math.sin(angle), Math.cos(angle), 0, 0];
+    if (!this.currentRotateMatrix.equals(matrix)) {
+        this.currentTransformMatrix = this.multiplyMatrix(this.currentTransformMatrix, matrix);
+        this.currentRotateMatrix = matrix;
+    }
+};
+
+Entity.prototype.multiplyMatrix = function(m1, m2) {
+    return [
+            m1[0] * m2[0] + m1[2] * m2[1],
+            m1[1] * m2[0] + m1[3] * m2[1],
+            m1[0] * m2[2] + m1[2] * m2[3],
+            m1[1] * m2[2] + m1[3] * m2[3],
+            m1[0] * m2[4] + m1[2] * m2[5] + m1[4],
+            m1[1] * m2[4] + m1[3] * m2[5] + m1[5]
+        ];
+};
+
+Entity.prototype.transformPoint = function(px, py) {
+  var x = px;
+  var y = py;
+  px = Math.round(x * this.currentTransformMatrix[0] + y * this.currentTransformMatrix[2] + this.currentTransformMatrix[4]);
+  py = Math.round(x * this.currentTransformMatrix[1] + y * this.currentTransformMatrix[3] + this.currentTransformMatrix[5]);
+  return [px, py];
 };

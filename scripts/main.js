@@ -13,6 +13,7 @@
          this.setColor("blue");
      });
      var rect2 = new Rectangle(65, 65, 50, 50);
+     rect2.setDraggable(true);
      rect2.registerOnClick(function() {
          this.setColor("green");
      });
@@ -25,7 +26,7 @@
      });
 
      // Make sure to attach your entities to the CT obj
-     ct.attachEntity(rect2, rect1, circ);
+     ct.attachEntity(rect2);//, rect1, circ);
 
      // Basic draw function, not related to CT or Entities
      function draw() {
@@ -33,14 +34,14 @@
          // Entities have an update() function that you can pass in what you want
          // to have happen to it on a redraw.
          // param1 = function with update logic, param2 = (true = fill object, false = stroke object)
-         rect1.update(function(self, ctx, gCtx) {
-             self.x += self.dir * 1;
-             if (self.x >= self.canvas.width - self.w || self.x <= 0) {
-                 self.dir = -self.dir;
-             }
-             self.render(ctx, true);
-         });
-         rect2.update(function(self, ctx, gCtx) {
+         // rect1.update(function(self, ctx, gCtx) {
+         //     self.x += self.dir * 1;
+         //     if (self.x >= self.canvas.width - self.w || self.x <= 0) {
+         //         self.dir = -self.dir;
+         //     }
+         //     self.render(ctx, true);
+         // });
+         rect2.update(function(self, ctx) {
              // self.x += self.dir * 2;
              // if (self.x >= self.canvas.width - self.w || self.x <= 0) {
              //     self.dir = -self.dir;
@@ -51,9 +52,9 @@
              self.render(ctx, true);
 
          });
-         circ.update(function(self, ctx, gCtx) {
-             self.render(ctx, true);
-         });
+         // circ.update(function(self, ctx, gCtx) {
+         //     self.render(ctx, true);
+         // });
          requestAnimationFrame(draw);
      }
      requestAnimationFrame(draw);

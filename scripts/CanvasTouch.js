@@ -2,10 +2,6 @@ function CanvasTouch(canvasId) {
     this.canvasId = canvasId;
     this.canvas = document.getElementById(canvasId);
     this.ctx = this.canvas.getContext('2d');
-    this.gCanvas = document.createElement('canvas');
-    this.gCanvas.width = this.canvas.width;
-    this.gCanvas.height = this.canvas.height;
-    this.gCtx = this.gCanvas.getContext('2d');
     
     this.entities = [];
     this.mousedown = false;
@@ -31,16 +27,9 @@ CanvasTouch.prototype._handleDown = function(event) {
         y: pageY - this.canvas.offsetTop
     };
 
-    this.gCtx.clearRect(0, 0, this.gCanvas.width, this.gCanvas.height);
-
     this.entities.forEach(function(entity) {
-        entity.applyTransformations();
-        entity.render(that.gCtx, true);
-        var imageData = that.gCtx.getImageData(clickPoint.x, clickPoint.y, 1, 1);
-
-        if (imageData.data[3] > 0) {
+        if (entity.contains(clickPoint)) {
             events.push(entity);
-            that.gCtx.clearRect(0, 0, that.gCanvas.width, that.gCanvas.height);
         }
     });
     
@@ -60,13 +49,24 @@ CanvasTouch.prototype._handleDown = function(event) {
         e.setClicked(true);
         e.setDeltaXY({x: deltaX, y: deltaY});
     }
-    this.gCtx.clearRect(0, 0, this.gCanvas.width, this.gCanvas.height);
 };
 
 CanvasTouch.prototype._handleUp = function(event) {
     this.mousedown = false;
 
+    var releasePoint = {
+        x: event.x - this.canvas.offsetLeft,
+        y: event.y - this.canvas.offsetTop
+    };
+
     this.entities.forEach(function(entity) {
+        if (entity.isClicked()) {
+            entity.x = releasePoint.x - entity.getDeltaXY().x;
+            entity.y = releasePoint.y - entity.getDeltaXY().y;
+            if (entity.updateBounds) {
+                entity.updateBounds(true);
+            }
+        }
         entity.setClicked(false);
     });
 };
@@ -105,13 +105,11 @@ CanvasTouch.prototype.attachEntity = function(param) {
         for (var i = 0; i < arguments.length; i++) {
             entity = arguments[i];
             entity.setCanvas(this.canvasId);
-            entity.setGCanvas(this.gCanvas);
             this.entities.push(entity);
         }
     } else {
         entity = param;
         entity.setCanvas(this.canvasId);
-        entity.setGCanvas(this.gCanvas);
         this.entities.push(entity);
     }
 };
