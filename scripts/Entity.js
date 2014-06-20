@@ -1,9 +1,10 @@
 function Entity() {
     this.dir = 1;
     this.color = "black";
+    this.isDragged = false;
     this.currentTransformMatrix = [1, 0, 0, 1, 0, 0];
-    this.currentTranslateMatrix = [1, 0, 0, 1, 0, 0];
-    this.currentRotateMatrix = [1, 0, 0, 1, 0, 0];
+    this.transformations = [];
+    this.stateChange = false;
 }
 Entity.prototype.drawStack = [];
 
@@ -26,14 +27,14 @@ Entity.prototype.getContext = function() {
     return this.ctx;
 };
 
-Entity.prototype.update = function(func) {
+Entity.prototype.update = function(func, reset) {
     this.ctx.save();
     func(this, this.ctx);
+    this.updateTransformation(reset);
+    if (this.updateBounds && reset) {
+        this.updateBounds(true);
+    }
     this.ctx.restore();
-
-    // if (this.updateBounds) {
-    //     this.updateBounds();
-    // }
 };
 
 Entity.prototype.registerOnClick = function(func) {
@@ -75,40 +76,59 @@ Entity.prototype.setColor = function(color) {
 Entity.prototype.resetCurrentMatrix = function() {
     this.currentTransformMatrix = [1, 0, 0, 1, 0, 0];
 };
-    
+
+Entity.prototype.updateTransformation = function(reset) {
+    var that = this;
+    var newMatrix = [1, 0, 0, 1, 0, 0];
+    this.transformations.forEach(function(m) {
+        newMatrix = that.multiplyMatrix(newMatrix, m);
+    });
+    this.currentTransformMatrix = newMatrix;
+    this.stateChange = true;
+
+    if (reset) {
+        //this.resetCurrentMatrix();
+        this.transformations = [];
+    }
+    console.log(this.transformations.length);
+};
+
 Entity.prototype.translate = function(x, y) {
     this.ctx.translate(x, y);
     var matrix = [1, 0, 0, 1, x, y];
-    if (!this.currentTranslateMatrix.equals(matrix)) {
-        this.currentTransformMatrix = this.multiplyMatrix(this.currentTransformMatrix, matrix);
-        this.currentTranslateMatrix = matrix;
-    }
+    this.transformations.push(matrix);
+    // var transformedMatrix = this.multiplyMatrix(this.currentTransformMatrix, matrix);
+    // if (!this.transformations.contains(transformedMatrix)) {
+    //     this._updateTransformation(transformedMatrix);
+    // }
 };
 
 Entity.prototype.rotate = function(angle) {
     this.ctx.rotate(angle);
     var matrix = [Math.cos(angle), Math.sin(angle), -Math.sin(angle), Math.cos(angle), 0, 0];
-    if (!this.currentRotateMatrix.equals(matrix)) {
-        this.currentTransformMatrix = this.multiplyMatrix(this.currentTransformMatrix, matrix);
-        this.currentRotateMatrix = matrix;
-    }
+    this.transformations.push(matrix);
+    // var transformedMatrix = this.multiplyMatrix(this.currentTransformMatrix, matrix);
+    // if (!this.transformations.contains(transformedMatrix)) {
+    //     this._updateTransformation(transformedMatrix);
+    // }
 };
 
 Entity.prototype.multiplyMatrix = function(m1, m2) {
     return [
-            m1[0] * m2[0] + m1[2] * m2[1],
-            m1[1] * m2[0] + m1[3] * m2[1],
-            m1[0] * m2[2] + m1[2] * m2[3],
-            m1[1] * m2[2] + m1[3] * m2[3],
-            m1[0] * m2[4] + m1[2] * m2[5] + m1[4],
-            m1[1] * m2[4] + m1[3] * m2[5] + m1[5]
-        ];
+        m1[0] * m2[0] + m1[2] * m2[1],
+        m1[1] * m2[0] + m1[3] * m2[1],
+        m1[0] * m2[2] + m1[2] * m2[3],
+        m1[1] * m2[2] + m1[3] * m2[3],
+        m1[0] * m2[4] + m1[2] * m2[5] + m1[4],
+        m1[1] * m2[4] + m1[3] * m2[5] + m1[5]
+    ];
 };
 
 Entity.prototype.transformPoint = function(px, py) {
-  var x = px;
-  var y = py;
-  px = Math.round(x * this.currentTransformMatrix[0] + y * this.currentTransformMatrix[2] + this.currentTransformMatrix[4]);
-  py = Math.round(x * this.currentTransformMatrix[1] + y * this.currentTransformMatrix[3] + this.currentTransformMatrix[5]);
-  return [px, py];
+    var x = px;
+    var y = py;
+    px = Math.round(x * this.currentTransformMatrix[0] + y * this.currentTransformMatrix[2] + this.currentTransformMatrix[4]);
+    py = Math.round(x * this.currentTransformMatrix[1] + y * this.currentTransformMatrix[3] + this.currentTransformMatrix[5]);
+    console.log([px, py]);
+    return [px, py];
 };

@@ -2,7 +2,7 @@
      window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
  window.onload = function() {
-    // Let's make our nice CT object we will be working with
+     // Let's make our nice CT object we will be working with
      var ct = new CanvasTouch('canvas');
 
      // Make a new Entity->Rectangle drawable
@@ -26,8 +26,8 @@
      });
 
      // Make sure to attach your entities to the CT obj
-     ct.attachEntity(rect2);//, rect1, circ);
-
+     ct.attachEntity(rect2); //, rect1, circ);
+    var c = 0;
      // Basic draw function, not related to CT or Entities
      function draw() {
          ct.getContext().clearRect(0, 0, ct.getCanvas().width, ct.getCanvas().height);
@@ -51,11 +51,16 @@
              self.translate(-self.x, -self.y);
              self.render(ctx, true);
 
-         });
+         }, true);
          // circ.update(function(self, ctx, gCtx) {
          //     self.render(ctx, true);
          // });
-         requestAnimationFrame(draw);
+
+        if (c < 10) {
+            requestAnimationFrame(draw);
+            c++;
+        }
+         
      }
      requestAnimationFrame(draw);
  };

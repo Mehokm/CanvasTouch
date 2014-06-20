@@ -26,7 +26,6 @@ CanvasTouch.prototype._handleDown = function(event) {
         x: pageX - this.canvas.offsetLeft,
         y: pageY - this.canvas.offsetTop
     };
-
     this.entities.forEach(function(entity) {
         if (entity.contains(clickPoint)) {
             events.push(entity);
@@ -61,13 +60,15 @@ CanvasTouch.prototype._handleUp = function(event) {
 
     this.entities.forEach(function(entity) {
         if (entity.isClicked()) {
-            entity.x = releasePoint.x - entity.getDeltaXY().x;
-            entity.y = releasePoint.y - entity.getDeltaXY().y;
-            if (entity.updateBounds) {
+            //entity.x = releasePoint.x - entity.getDeltaXY().x;
+            //entity.y = releasePoint.y - entity.getDeltaXY().y;
+            if (entity.isDragged && entity.updateBounds) {
+                console.log("That");
                 entity.updateBounds(true);
             }
         }
         entity.setClicked(false);
+        entity.isDragged = false;
     });
 };
 
@@ -90,11 +91,12 @@ CanvasTouch.prototype._handleDrag = function(event) {
         });
 
         if (e !== null && e.isDraggable()) {
+            e.isDragged = true;
             e.update(function(self, ctx) {
                 self.x = dragPoint.x - self.getDeltaXY().x;
                 self.y = dragPoint.y - self.getDeltaXY().y;
                 self.render(ctx, true);
-            });
+            }, false);
         }
     }
 };
