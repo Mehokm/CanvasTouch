@@ -2,10 +2,8 @@ Circle.prototype = Object.create(Entity.prototype);
 Circle.prototype.constructor = Circle;
 
 function Circle(x, y, r) {
-    Entity.call(this);
+    Entity.call(this, x, y);
 
-    this.x = x;
-    this.y = y;
     this.r = r;
 }
 

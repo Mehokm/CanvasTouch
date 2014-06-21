@@ -2,10 +2,8 @@ Rectangle.prototype = Object.create(Entity.prototype);
 Rectangle.prototype.constructor = Rectangle;
 
 function Rectangle(x, y, w, h) {
-    Entity.call(this);
+    Entity.call(this, x, y);
 
-    this.x = x;
-    this.y = y;
     this.w = w;
     this.h = h;
 

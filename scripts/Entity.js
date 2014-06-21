@@ -1,4 +1,6 @@
-function Entity() {
+function Entity(x, y) {
+    this.x = x;
+    this.y = y;
     this.dir = 1;
     this.color = "black";
     this.isDragged = false;
@@ -85,10 +87,23 @@ Entity.prototype.updateTransformation = function(reset) {
         newMatrix = that.multiplyMatrix(newMatrix, m);
     });
     this.currentTransformMatrix = newMatrix;
-
     if (reset) {
         this.stateChange = true;
         this.transformations = [];
+    }
+};
+
+Entity.prototype.moveX = function(x) {
+    this.x += x;
+    if (this.updateBounds) {
+        this.updateBounds(true);
+    }
+};
+
+Entity.prototype.moveY = function(y) {
+    this.y += y;
+    if (this.updateBounds) {
+        this.updateBounds(true);
     }
 };
 
@@ -101,6 +116,12 @@ Entity.prototype.translate = function(x, y) {
 Entity.prototype.rotate = function(angle) {
     this.ctx.rotate(angle);
     var matrix = [Math.cos(angle), Math.sin(angle), -Math.sin(angle), Math.cos(angle), 0, 0];
+    this.transformations.push(matrix);
+};
+
+Entity.prototype.scale = function(x, y) {
+    this.ctx.scale(x, y);
+    var matrix = [x, 0, 0, y, 0, 0];
     this.transformations.push(matrix);
 };
 
@@ -120,6 +141,5 @@ Entity.prototype.transformPoint = function(px, py) {
     var y = py;
     px = Math.round(x * this.currentTransformMatrix[0] + y * this.currentTransformMatrix[2] + this.currentTransformMatrix[4]);
     py = Math.round(x * this.currentTransformMatrix[1] + y * this.currentTransformMatrix[3] + this.currentTransformMatrix[5]);
-    //console.log([px, py]);
     return [px, py];
 };

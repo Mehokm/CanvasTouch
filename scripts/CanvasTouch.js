@@ -2,7 +2,7 @@ function CanvasTouch(canvasId) {
     this.canvasId = canvasId;
     this.canvas = document.getElementById(canvasId);
     this.ctx = this.canvas.getContext('2d');
-    
+
     this.entities = [];
     this.mousedown = false;
     this.mousemove = false;
@@ -15,23 +15,20 @@ function CanvasTouch(canvasId) {
 CanvasTouch.prototype._handleDown = function(event) {
     this.mousedown = true;
 
-    var that = this;
-    var pageX = event.x;
-    var pageY = event.y;
     var events = [];
     var pos = 0;
     var e = null;
 
     var clickPoint = {
-        x: pageX - this.canvas.offsetLeft,
-        y: pageY - this.canvas.offsetTop
+        x: event.x - this.canvas.offsetLeft,
+        y: event.y - this.canvas.offsetTop
     };
     this.entities.forEach(function(entity) {
         if (entity.contains(clickPoint)) {
             events.push(entity);
         }
     });
-    
+
     events.forEach(function(entity) {
         if (entity.stackPos >= pos) {
             pos = entity.stackPos;
@@ -46,17 +43,15 @@ CanvasTouch.prototype._handleDown = function(event) {
 
         e.onClick();
         e.setClicked(true);
-        e.setDeltaXY({x: deltaX, y: deltaY});
+        e.setDeltaXY({
+            x: deltaX,
+            y: deltaY
+        });
     }
 };
 
 CanvasTouch.prototype._handleUp = function(event) {
     this.mousedown = false;
-
-    var releasePoint = {
-        x: event.x - this.canvas.offsetLeft,
-        y: event.y - this.canvas.offsetTop
-    };
 
     this.entities.forEach(function(entity) {
         entity.setClicked(false);
@@ -66,14 +61,12 @@ CanvasTouch.prototype._handleUp = function(event) {
 
 CanvasTouch.prototype._handleDrag = function(event) {
     if (this.mousedown) {
-        var pageX = event.x;
-        var pageY = event.y;
         var events = [];
         var e = null;
 
         var dragPoint = {
-            x: pageX - this.canvas.offsetLeft,
-            y: pageY - this.canvas.offsetTop
+            x: event.x - this.canvas.offsetLeft,
+            y: event.y - this.canvas.offsetTop
         };
 
         this.entities.forEach(function(entity) {
