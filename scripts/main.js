@@ -26,7 +26,6 @@ var id;
      circ.registerOnClick(function() {
          this.setColor("red");
      });
-     var count = 50;
      // Make sure to attach your entities to the CT obj
      ct.attachEntity(rect2, rect1, circ);
      // Basic draw function, not related to CT or Entities
