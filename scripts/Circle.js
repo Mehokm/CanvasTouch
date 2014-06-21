@@ -15,7 +15,7 @@ Circle.prototype.contains = function(point) {
 
 Circle.prototype.render = function(ctx, fill) {
     if (!this.onStack) {
-        this.stackPos = this.drawStack.push(this) - 1;
+        this.stackPos = this.renderStack.push(this) - 1;
         this.onStack = true;
     }
 
@@ -30,4 +30,5 @@ Circle.prototype.render = function(ctx, fill) {
         ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
         ctx.stroke();
     }
+    this.firstDraw = false;
 };

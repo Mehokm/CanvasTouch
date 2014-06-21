@@ -5,8 +5,9 @@ function Entity() {
     this.currentTransformMatrix = [1, 0, 0, 1, 0, 0];
     this.transformations = [];
     this.stateChange = false;
+    this.firstDraw = true;
 }
-Entity.prototype.drawStack = [];
+Entity.prototype.renderStack = [];
 
 Entity.prototype.setCanvas = function(canvasId) {
     this.canvas = document.getElementById(canvasId);
@@ -31,7 +32,7 @@ Entity.prototype.update = function(func, reset) {
     this.ctx.save();
     func(this, this.ctx);
     this.updateTransformation(reset);
-    if (this.updateBounds && reset) {
+    if (this.updateBounds) {
         this.updateBounds(true);
     }
     this.ctx.restore();
@@ -84,33 +85,23 @@ Entity.prototype.updateTransformation = function(reset) {
         newMatrix = that.multiplyMatrix(newMatrix, m);
     });
     this.currentTransformMatrix = newMatrix;
-    this.stateChange = true;
 
     if (reset) {
-        //this.resetCurrentMatrix();
+        this.stateChange = true;
         this.transformations = [];
     }
-    console.log(this.transformations.length);
 };
 
 Entity.prototype.translate = function(x, y) {
     this.ctx.translate(x, y);
     var matrix = [1, 0, 0, 1, x, y];
     this.transformations.push(matrix);
-    // var transformedMatrix = this.multiplyMatrix(this.currentTransformMatrix, matrix);
-    // if (!this.transformations.contains(transformedMatrix)) {
-    //     this._updateTransformation(transformedMatrix);
-    // }
 };
 
 Entity.prototype.rotate = function(angle) {
     this.ctx.rotate(angle);
     var matrix = [Math.cos(angle), Math.sin(angle), -Math.sin(angle), Math.cos(angle), 0, 0];
     this.transformations.push(matrix);
-    // var transformedMatrix = this.multiplyMatrix(this.currentTransformMatrix, matrix);
-    // if (!this.transformations.contains(transformedMatrix)) {
-    //     this._updateTransformation(transformedMatrix);
-    // }
 };
 
 Entity.prototype.multiplyMatrix = function(m1, m2) {
@@ -129,6 +120,6 @@ Entity.prototype.transformPoint = function(px, py) {
     var y = py;
     px = Math.round(x * this.currentTransformMatrix[0] + y * this.currentTransformMatrix[2] + this.currentTransformMatrix[4]);
     py = Math.round(x * this.currentTransformMatrix[1] + y * this.currentTransformMatrix[3] + this.currentTransformMatrix[5]);
-    console.log([px, py]);
+    //console.log([px, py]);
     return [px, py];
 };

@@ -44,22 +44,16 @@ Rectangle.prototype.updateBounds = function(flag) {
             });
         });
         this.verticies = newVerts;
-        console.log(newVerts);
     }
     this.stateChange = false;
-    console.log(this.currentTransformMatrix);
 };
 
 Rectangle.prototype.contains = function(point) {
-    if (this.stateChange) {
-        this.updateBounds();
-    }
     var inside = false;
     var nVert = this.verticies.length;
     var verticies = this.verticies;
-    console.log("p: " + point.x + ", " + point.y);
+
     for (var i = 0, j = nVert - 1; i < nVert; j = i++) {
-        console.log("v: " + verticies[i].x + ", " + verticies[i].y);
         if ((verticies[i].y >= point.y) != (verticies[j].y >= point.y) &&
             (point.x <= (verticies[j].x - verticies[i].x) * (point.y - verticies[i].y) / (verticies[j].y - verticies[i].y) + verticies[i].x)) {
             inside = !inside;
@@ -70,7 +64,7 @@ Rectangle.prototype.contains = function(point) {
 
 Rectangle.prototype.render = function(ctx, fill) {
     if (!this.onStack) {
-        this.stackPos = this.drawStack.push(this) - 1;
+        this.stackPos = this.renderStack.push(this) - 1;
         this.onStack = true;
     }
 
@@ -81,4 +75,5 @@ Rectangle.prototype.render = function(ctx, fill) {
         ctx.strokeStyle = this.color;
         ctx.strokeRect(this.x, this.y, this.w, this.h);
     }
+    this.firstDraw = false;
 };

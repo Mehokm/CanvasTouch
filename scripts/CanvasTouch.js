@@ -59,14 +59,6 @@ CanvasTouch.prototype._handleUp = function(event) {
     };
 
     this.entities.forEach(function(entity) {
-        if (entity.isClicked()) {
-            //entity.x = releasePoint.x - entity.getDeltaXY().x;
-            //entity.y = releasePoint.y - entity.getDeltaXY().y;
-            if (entity.isDragged && entity.updateBounds) {
-                console.log("That");
-                entity.updateBounds(true);
-            }
-        }
         entity.setClicked(false);
         entity.isDragged = false;
     });
@@ -96,7 +88,7 @@ CanvasTouch.prototype._handleDrag = function(event) {
                 self.x = dragPoint.x - self.getDeltaXY().x;
                 self.y = dragPoint.y - self.getDeltaXY().y;
                 self.render(ctx, true);
-            }, false);
+            }, true);
         }
     }
 };
