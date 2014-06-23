@@ -35,7 +35,7 @@ CanvasTouch.prototype._handleDown = function(event) {
             e = entity;
         }
     });
-    if (e !== null) {
+    if (e !== null && e.func) {
         var deltaX = clickPoint.x - e.x;
         var deltaY = clickPoint.y - e.y;
         e.x = clickPoint.x - deltaX;
