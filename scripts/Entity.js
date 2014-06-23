@@ -94,16 +94,20 @@ Entity.prototype.updateTransformation = function(reset) {
 };
 
 Entity.prototype.moveX = function(x) {
-    this.x += x;
-    if (this.updateBounds) {
-        this.updateBounds(true);
+    if (!this.isClicked()) {
+        this.x += x;
+        if (this.updateBounds) {
+            this.updateBounds(true);
+        }
     }
 };
 
 Entity.prototype.moveY = function(y) {
-    this.y += y;
-    if (this.updateBounds) {
-        this.updateBounds(true);
+    if (!this.isClicked()) {
+        this.y += y;
+        if (this.updateBounds) {
+            this.updateBounds(true);
+        }
     }
 };
 
