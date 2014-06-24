@@ -8,6 +8,8 @@ function Entity(x, y) {
     this.transformations = [];
     this.stateChange = false;
     this.firstDraw = true;
+    this.scaleX = 1;
+    this.scaleY = 1;
 }
 Entity.prototype.renderStack = [];
 
@@ -35,7 +37,7 @@ Entity.prototype.update = function(func, reset) {
     func(this, this.ctx);
     this.updateTransformation(reset);
     if (this.updateBounds) {
-        this.updateBounds(true);
+        this.updateBounds();
     }
     this.ctx.restore();
 };
@@ -86,10 +88,12 @@ Entity.prototype.updateTransformation = function(reset) {
     this.transformations.forEach(function(m) {
         newMatrix = that.multiplyMatrix(newMatrix, m);
     });
-    this.currentTransformMatrix = newMatrix;
+    if (!this.currentTransformMatrix.equals(newMatrix)) {
+        this.currentTransformMatrix = newMatrix;
+        this.stateChange = true;
+    }
     if (reset) {
         this.transformations = [];
-        this.stateChange = true;
     }
 };
 
@@ -124,6 +128,8 @@ Entity.prototype.rotate = function(angle) {
 };
 
 Entity.prototype.scale = function(x, y) {
+    this.scaleX = x;
+    this.scaleY = y;
     this.ctx.scale(x, y);
     var matrix = [x, 0, 0, y, 0, 0];
     this.transformations.push(matrix);

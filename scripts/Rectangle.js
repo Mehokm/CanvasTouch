@@ -10,6 +10,7 @@ function Rectangle(x, y, w, h) {
     this.h = h;
 
     this.setVerticies();
+    this.bounds = this.verticies;
 }
 
 Rectangle.prototype.setVerticies = function() {
@@ -26,6 +27,7 @@ Rectangle.prototype.setVerticies = function() {
         x: this.x,
         y: this.y + this.h
     }];
+    this.bounds = this.verticies;
 };
 
 Rectangle.prototype.render = function(ctx, fill) {

@@ -6,9 +6,13 @@ function Polygon(x, y, verticies) {
     this.prevX = x;
     this.prevY = y;
     this.verticies = verticies;
+    this.bounds = verticies;
 }
 
 Polygon.prototype.setVerticies = function() {
+    this.x /= this.scaleX;
+    this.y /= this.scaleY;
+    
     var diffX = this.x - this.prevX;
     var diffY = this.y - this.prevY;
     this.verticies.forEach(function(v) {
@@ -25,24 +29,25 @@ Polygon.prototype.updateBounds = function(flag) {
     }
     if (this.stateChange) {
         var that = this;
-        var newVerts = [];
+        var newBounds = [];
 
         this.verticies.forEach(function(v) {
             v = that.transformPoint(v.x, v.y);
-            newVerts.push({
+            newBounds.push({
                 x: v[0],
                 y: v[1]
             });
         });
-        this.verticies = newVerts;
+
+        this.bounds = newBounds;
+        this.stateChange = false;
     }
-    this.stateChange = false;
 };
 
 Polygon.prototype.contains = function(point) {
     var inside = false;
-    var nVert = this.verticies.length;
-    var verticies = this.verticies;
+    var nVert = this.bounds.length;
+    var verticies = this.bounds;
 
     for (var i = 0, j = nVert - 1; i < nVert; j = i++) {
         if ((verticies[i].y >= point.y) != (verticies[j].y >= point.y) &&
@@ -59,8 +64,8 @@ Polygon.prototype.getArea = function() {
 	var n = v.length;
 	for (var i = 0, j = n - 1; i < n; i++) {
 		area += (v[i].x + v[j].x) * (v[i].y - v[j].y);
-		j = i
-	};
+		j = i;
+	}
 	return area / 2;
 };
 
@@ -72,7 +77,7 @@ Polygon.prototype.getCenterpoint = function() {
     for (var i = 0; i < n; i++) {
         x += v[i].x;
         y += v[i].y;
-    };
+    }
     return {'x': x / n, 'y': y / n};
 };
 Polygon.prototype.render = function(ctx, fill) {

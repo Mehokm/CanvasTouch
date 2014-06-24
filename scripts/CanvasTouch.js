@@ -78,8 +78,11 @@ CanvasTouch.prototype._handleDrag = function(event) {
         if (e !== null && e.isDraggable()) {
             e.isDragged = true;
             e.update(function(self, ctx) {
-                self.x = dragPoint.x - self.getDeltaXY().x;
-                self.y = dragPoint.y - self.getDeltaXY().y;
+                self.x = (dragPoint.x - self.getDeltaXY().x) / self.scaleX;
+                self.y = (dragPoint.y - self.getDeltaXY().y) / self.scaleY;
+                if (e.setVerticies) {
+                    e.setVerticies();
+                }
                 self.render(ctx, true);
             }, true);
         }

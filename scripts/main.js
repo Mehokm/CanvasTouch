@@ -9,11 +9,12 @@
      // Make a new Entity->Rectangle drawable
      // param1 = x, param2 = y, param3 = width, param4 = height
      var rect1 = new Rectangle(10, 10, 50, 50);
-     var rect1ScaleX = 3;
+     var rect1ScaleX = 1;
      // Let's set our stuff we want to happen when the Rectanle is clicked
      rect1.registerOnClick(function() {
          this.setColor("blue");
      });
+     rect1.setDraggable(true);
      var rect2 = new Rectangle(65, 65, 50, 50);
      rect2.setDraggable(true);
      rect2.registerOnClick(function() {
@@ -63,7 +64,7 @@
              if (self.x * rect1ScaleX >= self.canvas.width - self.w * rect1ScaleX || self.x <= 0) {
                  self.dir = -self.dir;
              }
-             self.scale(rect1ScaleX, 1);
+             //self.scale(rect1ScaleX, 1);
              self.render(ctx, true);
          }, true);
 
@@ -84,15 +85,17 @@
          });
 
          poly.update(function(self, ctx) {
-             //self.scale(2, 1);
-             //self.translate(self.verticies[0].x, self.verticies[0].y);
-             //self.rotate(45 * Math.PI / 180);
-             //self.translate(-self.verticies[0].x, -self.verticies[0].y);
+            ctx.save();
+             //self.scale(2, 3);
+             self.translate(self.verticies[0].x, self.verticies[0].y);
+             self.rotate(45 * Math.PI / 180);
+             self.translate(-self.verticies[0].x, -self.verticies[0].y);
              self.render(ctx, true);
+             ctx.restore();
          }, true);
-         // if (count++ < 10) {
-         //     requestAnimationFrame(draw);
-         // }
+          // if (count++ < 10) {
+          //     requestAnimationFrame(draw);
+          // }
          requestAnimationFrame(draw);
      }
      id = requestAnimationFrame(draw);
