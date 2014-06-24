@@ -28,5 +28,4 @@ Circle.prototype.render = function(ctx, fill) {
         ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
         ctx.stroke();
     }
-    this.firstDraw = false;
 };

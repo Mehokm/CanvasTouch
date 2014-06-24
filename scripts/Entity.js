@@ -88,8 +88,8 @@ Entity.prototype.updateTransformation = function(reset) {
     });
     this.currentTransformMatrix = newMatrix;
     if (reset) {
-        this.stateChange = true;
         this.transformations = [];
+        this.stateChange = true;
     }
 };
 

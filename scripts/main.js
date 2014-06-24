@@ -29,6 +29,9 @@
      });
 
      var poly = new Polygon(100, 100, [{
+         x: 100,
+         y: 100
+     }, {
          x: 110,
          y: 70
      }, {
@@ -42,7 +45,7 @@
          y: 140
      }]);
      poly.registerOnClick(function() {
-        this.setColor("pink");
+         this.setColor("pink");
      });
      poly.setDraggable(true);
      // Make sure to attach your entities to the CT obj
@@ -57,7 +60,7 @@
          // param1 = function with update logic, param2 = (true = fill object, false = stroke object)
          rect1.update(function(self, ctx) {
              self.moveX(self.dir * 1);
-             if (self.x * rect1ScaleX >= self.canvas.width - self.w * rect1ScaleX|| self.x <= 0) {
+             if (self.x * rect1ScaleX >= self.canvas.width - self.w * rect1ScaleX || self.x <= 0) {
                  self.dir = -self.dir;
              }
              self.scale(rect1ScaleX, 1);
@@ -65,12 +68,12 @@
          }, true);
 
          rect2.update(function(self, ctx) {
-             self.moveX(self.dir * 2);
-             if (self.x >= self.canvas.width - self.w || self.x <= 0) {
-                 self.dir = -self.dir;
-             }
+             // self.moveX(self.dir * 2);
+             // if (self.x >= self.canvas.width - self.w || self.x <= 0) {
+             //     self.dir = -self.dir;
+             // }
              self.translate((self.verticies[0].x + self.verticies[2].x) / 2, (self.verticies[0].y + self.verticies[2].y) / 2);
-             self.rotate(++angle * Math.PI / 180);
+             self.rotate(angle * Math.PI / 180);
              self.translate(-(self.verticies[0].x + self.verticies[2].x) / 2, -(self.verticies[0].y + self.verticies[2].y) / 2);
              self.render(ctx, true);
 
@@ -81,9 +84,15 @@
          });
 
          poly.update(function(self, ctx) {
-            self.render(ctx, false);
+             //self.scale(2, 1);
+             //self.translate(self.verticies[0].x, self.verticies[0].y);
+             //self.rotate(45 * Math.PI / 180);
+             //self.translate(-self.verticies[0].x, -self.verticies[0].y);
+             self.render(ctx, true);
          }, true);
-
+         // if (count++ < 10) {
+         //     requestAnimationFrame(draw);
+         // }
          requestAnimationFrame(draw);
      }
      id = requestAnimationFrame(draw);
