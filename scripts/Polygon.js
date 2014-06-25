@@ -10,9 +10,6 @@ function Polygon(x, y, verticies) {
 }
 
 Polygon.prototype.setVerticies = function() {
-    this.x /= this.scaleX;
-    this.y /= this.scaleY;
-    
     var diffX = this.x - this.prevX;
     var diffY = this.y - this.prevY;
     this.verticies.forEach(function(v) {
@@ -59,18 +56,18 @@ Polygon.prototype.contains = function(point) {
 };
 
 Polygon.prototype.getArea = function() {
-	var area = 0;
-	var v = this.verticies;
-	var n = v.length;
-	for (var i = 0, j = n - 1; i < n; i++) {
-		area += (v[i].x + v[j].x) * (v[i].y - v[j].y);
-		j = i;
-	}
-	return area / 2;
+    var area = 0;
+    var v = this.verticies;
+    var n = v.length;
+    for (var i = 0, j = n - 1; i < n; i++) {
+        area += (v[i].x + v[j].x) * (v[i].y - v[j].y);
+        j = i;
+    }
+    return area / 2;
 };
 
 Polygon.prototype.getCenterpoint = function() {
-	var x = 0;
+    var x = 0;
     var y = 0;
     var v = this.verticies;
     var n = v.length;
@@ -78,7 +75,10 @@ Polygon.prototype.getCenterpoint = function() {
         x += v[i].x;
         y += v[i].y;
     }
-    return {'x': x / n, 'y': y / n};
+    return {
+        'x': x / n,
+        'y': y / n
+    };
 };
 Polygon.prototype.render = function(ctx, fill) {
     if (!this.onStack) {

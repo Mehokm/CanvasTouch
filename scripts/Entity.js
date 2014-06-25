@@ -100,6 +100,7 @@ Entity.prototype.updateTransformation = function(reset) {
 Entity.prototype.moveX = function(x) {
     if (!this.isClicked()) {
         this.x += x;
+        this.stateChange = true;
         if (this.updateBounds) {
             this.updateBounds(true);
         }
@@ -109,6 +110,7 @@ Entity.prototype.moveX = function(x) {
 Entity.prototype.moveY = function(y) {
     if (!this.isClicked()) {
         this.y += y;
+        this.stateChange = true;
         if (this.updateBounds) {
             this.updateBounds(true);
         }
