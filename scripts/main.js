@@ -9,12 +9,12 @@
      // Make a new Entity->Rectangle drawable
      // param1 = x, param2 = y, param3 = width, param4 = height
      var rect1 = new Rectangle(10, 10, 50, 50);
+     rect1.setDraggable(true);
      var rect1ScaleX = 2;
      // Let's set our stuff we want to happen when the Rectanle is clicked
      rect1.registerOnClick(function() {
          this.setColor("blue");
      });
-     rect1.setDraggable(true);
 
      var rect2 = new Rectangle(65, 65, 100, 100);
      rect2.setDraggable(true);
@@ -29,7 +29,6 @@
      // Make a new Entity->Circle drawable
      // param1 = x, param2 = y, param3 = radius
      var circ = new Circle(50, 50, 30);
-     var angle = 45;
      circ.setDraggable(true);
      circ.registerOnClick(function() {
          this.setColor("red");
@@ -51,15 +50,18 @@
          x: 100,
          y: 140
      }]);
+     poly.setDraggable(true);
      poly.registerOnClick(function() {
          this.setColor("pink");
      });
-     poly.setDraggable(true);
+     
      // Make sure to attach your entities to the CT obj
      ct.attachEntity(rect2, rect1, circ, poly);
-     // Basic draw function, not related to CT or Entities
+
+     var angle = 45;
      var count = 0;
 
+     // Basic draw function, not related to CT or Entities
      function draw() {
          ct.getContext().clearRect(0, 0, ct.getCanvas().width, ct.getCanvas().height);
          // Entities have an update() function that you can pass in what you want
@@ -86,10 +88,10 @@
 
          }, true);
 
-         // circ.update(function(self, ctx) {
-         //     //self.scale(2, 2);
-         //     self.render(ctx, true);
-         // });
+         circ.update(function(self, ctx) {
+             //self.scale(2, 2);
+             self.render(ctx, true);
+         });
 
          poly.update(function(self, ctx) {
              ctx.save();

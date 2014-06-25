@@ -35,7 +35,7 @@ CanvasTouch.prototype._handleDown = function(event) {
             e = entity;
         }
     });
-    if (e !== null && e.func) {
+    if (e !== null && e.clickFunc) {
         var deltaX = clickPoint.x - e.x;
         var deltaY = clickPoint.y - e.y;
         e.x = clickPoint.x - deltaX;
@@ -64,8 +64,8 @@ CanvasTouch.prototype._handleUp = function(event) {
 
     this.entities.forEach(function(entity) {
         if (entity.isHotspot() && e !== null && e instanceof Polygon) {
-            if (entity.containsPolygon(e)) {
-                console.log("yay!");
+            if (entity.containsPolygon(e) && entity.hotspotFunc) {
+                entity.onHotspot();
             }
         }
     });
