@@ -20,6 +20,10 @@ Polygon.prototype.setVerticies = function() {
     this.prevY = this.y;
 };
 
+Polygon.prototype.getBounds = function() {
+    return this.bounds;
+};
+
 Polygon.prototype.updateBounds = function(flag) {
     if (flag) {
         this.setVerticies();
@@ -41,7 +45,7 @@ Polygon.prototype.updateBounds = function(flag) {
     }
 };
 
-Polygon.prototype.contains = function(point) {
+Polygon.prototype.containsPoint = function(point) {
     var inside = false;
     var nVert = this.bounds.length;
     var verticies = this.bounds;
@@ -50,6 +54,18 @@ Polygon.prototype.contains = function(point) {
         if ((verticies[i].y >= point.y) != (verticies[j].y >= point.y) &&
             (point.x <= (verticies[j].x - verticies[i].x) * (point.y - verticies[i].y) / (verticies[j].y - verticies[i].y) + verticies[i].x)) {
             inside = !inside;
+        }
+    }
+    return inside;
+};
+
+Polygon.prototype.containsPolygon = function(polygon) {
+    var pVerts = polygon.getBounds();
+    var inside = true;
+    for (var i = pVerts.length - 1; i >= 0; i--) {
+        inside = this.containsPoint(pVerts[i]);
+        if (!inside) {
+            break;
         }
     }
     return inside;
@@ -85,13 +101,13 @@ Polygon.prototype.render = function(ctx, fill) {
         this.stackPos = this.renderStack.push(this) - 1;
         this.onStack = true;
     }
-
+    var i = 1;
     if (fill) {
         ctx.fillStyle = this.color;
         ctx.save();
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
-        for (var i = 0; i < this.verticies.length; i++) {
+        for (; i < this.verticies.length; i++) {
             ctx.lineTo(this.verticies[i].x, this.verticies[i].y);
         }
         ctx.lineTo(this.x, this.y);
@@ -102,7 +118,7 @@ Polygon.prototype.render = function(ctx, fill) {
         ctx.save();
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
-        for (var i = 0; i < this.verticies.length; i++) {
+        for (; i < this.verticies.length; i++) {
             ctx.lineTo(this.verticies[i].x, this.verticies[i].y);
         }
         ctx.lineTo(this.x, this.y);

@@ -42,12 +42,20 @@ Entity.prototype.update = function(func, reset) {
     this.ctx.restore();
 };
 
-Entity.prototype.registerOnClick = function(func) {
-    this.func = func;
+Entity.prototype.registerOnClick = function(clickFunc) {
+    this.clickFunc = clickFunc;
 };
 
 Entity.prototype.onClick = function() {
-    this.func();
+    this.clickFunc();
+};
+
+Entity.prototype.registerOnHotspot = function(hotspotFunc) {
+    this.hotspotFunc = hotspotFunc;
+};
+
+Entity.prototype.onHotspot = function() {
+    this.hotspotFunc();
 };
 
 Entity.prototype.setDraggable = function(draggable) {
@@ -64,6 +72,14 @@ Entity.prototype.setClicked = function(clicked) {
 
 Entity.prototype.isClicked = function() {
     return this.clicked;
+};
+
+Entity.prototype.setHotspot = function(hotspot) {
+    this.hotspot = hotspot;
+};
+
+Entity.prototype.isHotspot = function() {
+    return this.hotspot;
 };
 
 Entity.prototype.setDeltaXY = function(deltaXY) {

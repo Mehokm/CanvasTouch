@@ -7,8 +7,13 @@ function Circle(x, y, r) {
     this.r = r;
 }
 
-Circle.prototype.contains = function(point) {
-    return Math.pow(point.x - this.x, 2) + Math.pow(point.y - this.y, 2) <= Math.pow(this.r, 2);
+Circle.prototype.containsPoint = function(point) {
+    var normX = point.x - this.x;
+    var normY = point.y - this.y;
+
+    this.a = this.r * this.scaleX;
+    this.b = this.r * this.scaleY;
+    return ((normX * normX) / (this.a * this.a)) + ((normY * normY) / (this.b * this.b)) <= 1;
 };
 
 Circle.prototype.render = function(ctx, fill) {

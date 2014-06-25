@@ -15,11 +15,17 @@
          this.setColor("blue");
      });
      rect1.setDraggable(true);
-     var rect2 = new Rectangle(65, 65, 50, 50);
+
+     var rect2 = new Rectangle(65, 65, 100, 100);
      rect2.setDraggable(true);
+     rect2.setHotspot(true);
      rect2.registerOnClick(function() {
          this.setColor("green");
      });
+     rect2.registerOnHotspot(function() {
+        this.setColor("orange");
+     });
+
      // Make a new Entity->Circle drawable
      // param1 = x, param2 = y, param3 = radius
      var circ = new Circle(50, 50, 30);
@@ -80,9 +86,10 @@
 
          }, true);
 
-         circ.update(function(self, ctx) {
-             self.render(ctx, true);
-         });
+         // circ.update(function(self, ctx) {
+         //     //self.scale(2, 2);
+         //     self.render(ctx, true);
+         // });
 
          poly.update(function(self, ctx) {
              ctx.save();

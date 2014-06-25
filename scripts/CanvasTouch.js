@@ -24,7 +24,7 @@ CanvasTouch.prototype._handleDown = function(event) {
         y: event.y - this.canvas.offsetTop
     };
     this.entities.forEach(function(entity) {
-        if (entity.contains(clickPoint)) {
+        if (entity.containsPoint(clickPoint)) {
             events.push(entity);
         }
     });
@@ -53,9 +53,21 @@ CanvasTouch.prototype._handleDown = function(event) {
 CanvasTouch.prototype._handleUp = function(event) {
     this.mousedown = false;
 
+    var e = null;
     this.entities.forEach(function(entity) {
+        if (entity.isClicked()) {
+            e = entity;
+        }
         entity.setClicked(false);
         entity.isDragged = false;
+    });
+
+    this.entities.forEach(function(entity) {
+        if (entity.isHotspot() && e !== null && e instanceof Polygon) {
+            if (entity.containsPolygon(e)) {
+                console.log("yay!");
+            }
+        }
     });
 };
 
