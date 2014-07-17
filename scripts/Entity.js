@@ -13,7 +13,16 @@ function Entity(x, y) {
     this.scaleX = 1;
     this.scaleY = 1;
 }
+
 Entity.prototype.renderStack = [];
+
+Entity.prototype.getX = function() {
+    return this.x;
+};
+
+Entity.prototype.getY = function() {
+    return this.y;
+};
 
 Entity.prototype.setCanvas = function(canvasId) {
     this.canvas = document.getElementById(canvasId);
