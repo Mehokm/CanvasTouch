@@ -30,6 +30,7 @@
      // param1 = x, param2 = y, param3 = radius
      var circ = new Circle(50, 50, 30);
      circ.setDraggable(true);
+     circ.lockXAxis();
      circ.registerOnClick(function() {
          this.setColor("red");
      });

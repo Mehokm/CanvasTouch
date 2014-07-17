@@ -3,6 +3,8 @@ function Entity(x, y) {
     this.y = y;
     this.dir = 1;
     this.color = "black";
+    this.yLocked = false;
+    this.xLocked = false;
     this.isDragged = false;
     this.currentTransformMatrix = [1, 0, 0, 1, 0, 0];
     this.transformations = [];
@@ -92,6 +94,30 @@ Entity.prototype.getDeltaXY = function() {
 
 Entity.prototype.setColor = function(color) {
     this.color = color;
+};
+
+Entity.prototype.lockYAxis = function() {
+    this.yLocked = true;
+};
+
+Entity.prototype.unlockYAxis = function() {
+    this.yLocked = false;
+};
+
+Entity.prototype.isYAxisLocked = function() {
+    return this.yLocked;
+};
+
+Entity.prototype.lockXAxis = function() {
+    this.xLocked = true;
+};
+
+Entity.prototype.unlockXAxis = function() {
+    this.xLocked = false;
+};
+
+Entity.prototype.isXAxisLocked = function() {
+    return this.xLocked;
 };
 
 Entity.prototype.resetCurrentMatrix = function() {
